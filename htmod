@@ -1,0 +1,4 @@
+#!/bin/sh
+./lp2dlp -F <$1 >$1.$$
+./boole <$1.$$ | ./int $1.$$ | sort
+rm $1.$$
