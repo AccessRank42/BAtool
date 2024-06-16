@@ -16,6 +16,8 @@ def parse_SE_models_of_P(filename, as_program = False):
         popen = subprocess.Popen(args, stdout=subprocess.PIPE, text=True)
         popen.wait()
         output = popen.stdout.read()
+        if output == "0\n":
+            return []
     else:
         output = ''
         with open(filename) as file:

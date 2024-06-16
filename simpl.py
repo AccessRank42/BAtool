@@ -65,6 +65,7 @@ def main():
             FULL = True
         else:
             cleaned_args.append(arg)
+
             
     if len(cleaned_args) < 3:
         if ((len(cleaned_args) ==  2) and A_from_CL):
@@ -93,8 +94,14 @@ def main():
         return 1
     
     if DEBUG:
-        print("This shoudld be the A")
+        print("This should be the A")
         print(A_vars)
+    
+    if len(SE_model_list) == 0:
+        print("Program has no SE-models.")
+        print("Inconsistent program.")
+        
+    #print(SE_model_list)
         
     if (as_program[0]):
         print_formated_SE_model_list(SE_model_list)
@@ -104,6 +111,12 @@ def main():
         projected_list.append(project_to_complement(model[0], model[1], A_vars))
     # print(projected_list)
     
+    if (test_uniform_conditions(SE_model_list, A_vars)):
+        print("A uniform A-simplification of P exists\n\n")
+    if (test_strong_conditions(SE_model_list, A_vars)):
+        print("A strong A-simplifaction of P exists")
+    
+def test_uniform_conditions(SE_model_list, A_vars):    
     unif_A_simp_exists = True
     print("Testing uniform simplification condition 1 ...")
     if cond_1(SE_model_list, A_vars):
@@ -126,9 +139,33 @@ def main():
         print("")
         unif_A_simp_exists = False
         
-    if (unif_A_simp_exists):
-        print("A uniform A-simplification of P exists\n\n")
+    return unif_A_simp_exists
+
+def test_uniform_conditions_quiet(SE_model_list, A_vars):   #note: not fully quiet, conditions still print on failure 
+    # unif_A_simp_exists = True
+    # if not cond_1(SE_model_list, A_vars, True):
+    #     unif_A_simp_exists = False
         
+    # if not cond_2(SE_model_list, A_vars, True):
+    #     unif_A_simp_exists = False
+    
+    # if not cond_3(SE_model_list, A_vars, True):
+    #     unif_A_simp_exists = False
+        
+    cond1 = cond_1(SE_model_list, A_vars, True)
+    cond2 = cond_2(SE_model_list,  A_vars, True)
+    cond3 = cond_3(SE_model_list, A_vars, True)
+    
+    # if (cond2 and not cond3):
+    #     print("hey")
+    #     print(A_vars)
+    # if (cond3 and not cond2):
+    #     print("ho")
+
+    return cond1 and cond2 and cond3 
+        
+
+def test_strong_conditions(SE_model_list, A_vars): 
     strong_A_simp_exists = True
     print("Testing strong simplification condition 1 ...")
     if strong_cond1(SE_model_list, A_vars):
@@ -150,12 +187,18 @@ def main():
     else: 
         print("")
         strong_A_simp_exists = False
-        
-        
-    if (strong_A_simp_exists):
-        print("A strong A-simplifaction of P exists")
     
-def cond_1(SE_model_list, A):
+    return strong_A_simp_exists
+
+def test_strong_conditions_quiet(SE_model_list, A_vars):    #note: not fully quiet, conditions still print on failure 
+    # strong_A_simp_exists = True
+    cond1 = strong_cond1(SE_model_list, A_vars, True)
+    cond2 = strong_cond2(SE_model_list,  A_vars, True)
+    cond3 = strong_cond3(SE_model_list, A_vars, True)
+
+    return cond1 and cond2 and cond3
+    
+def cond_1(SE_model_list, A, silent=False):
     holds = True
     for model in SE_model_list:
         X = model[0]
@@ -164,14 +207,16 @@ def cond_1(SE_model_list, A):
         if cond_1_check(SE_model_list, A, X, Y, X_complement_A, Y_complement_A):
             continue
         if not FULL:
-            print('Condition 1 does not hold at least for the following X, Y:')
-            print(format_set(X), ',', format_set(Y))
-            print("For a {X,Y} \u2208 SE(P) with X \u2282 Y, there does not exist a Y' \u2287 X such that {Y',Y'} \u2208 SE(P) and where for each M with X \u2286 M \u2282 Y, {M,Y'} \u2209 SE(P).")
+            if not silent:
+                print('Condition 1 does not hold at least for the following X, Y:')
+                print(format_set(X), ',', format_set(Y))
+                print("For a {X,Y} \u2208 SE(P) with X \u2282 Y, there does not exist a Y' \u2287 X such that {Y',Y'} \u2208 SE(P) and where for each M with X \u2286 M \u2282 Y, {M,Y'} \u2209 SE(P).")
             return False
-        print('Condition 1 does not hold for the following X, Y:')
-        print(format_set(X), ',', format_set(Y))
-        if holds:
-            print("For a {X,Y} \u2208 SE(P) with X \u2282 Y, there does not exist a Y' \u2287 X such that {Y',Y'} \u2208 SE(P) and where for each M with X \u2286 M \u2282 Y, {M,Y'} \u2209 SE(P).")
+        if not silent:
+            print('Condition 1 does not hold for the following X, Y:')
+            print(format_set(X), ',', format_set(Y))
+            if holds:
+                print("For a {X,Y} \u2208 SE(P) with X \u2282 Y, there does not exist a Y' \u2287 X such that {Y',Y'} \u2208 SE(P) and where for each M with X \u2286 M \u2282 Y, {M,Y'} \u2209 SE(P).")
         holds = False
     
     return holds
@@ -204,7 +249,7 @@ def cond_1_check(SE_model_list, A, X, Y, X_complement_A, Y_complement_A):
         return True # condition holds for this model <X, Y> \in SE(P)
     return False
 
-def cond_2(SE_model_list, A):
+def cond_2(SE_model_list, A, silent=False):
     holds = True
     A_subsets = generate_sets(set(), A)
     A_subsets.append(A)
@@ -250,16 +295,18 @@ def cond_2(SE_model_list, A):
                     
                 if not valid_Y_prime_exists:
                     if not FULL:
-                        print("Condition 2 does not hold at least for the following X, Y, X':")
-                        print([format_set(X), format_set(Y), format_set(X_prime)])
-                        print("For a {X,Y} with {Y,Y} \u2208 SE(P) and X \u2282 Y, such that for each M with X \u2286 M \u2282 Y, {M,Y} \u2209 SE(P) and for X',")
-                        print("there does not exist a {Y',Y'} \u2208 SE(P) such that X' \u2286 Y' and for each M' with X' \u2286 M' \u2282 Y', {M',Y'} \u2209 SE(P).")   
+                        if not silent:
+                            print("Condition 2 does not hold at least for the following X, Y, X':")
+                            print([format_set(X), format_set(Y), format_set(X_prime)])
+                            print("For a {X,Y} with {Y,Y} \u2208 SE(P) and X \u2282 Y, such that for each M with X \u2286 M \u2282 Y, {M,Y} \u2209 SE(P) and for X',")
+                            print("there does not exist a {Y',Y'} \u2208 SE(P) such that X' \u2286 Y' and for each M' with X' \u2286 M' \u2282 Y', {M',Y'} \u2209 SE(P).")   
                         return False
-                    print("Condition 2 does not hold for the following X, Y, X':")
-                    print([format_set(X), format_set(Y), format_set(X_prime)])
-                    if holds:
-                        print("For a {X,Y} with {Y,Y} \u2208 SE(P) and X \u2282 Y, such that for each M with X \u2286 M \u2282 Y, {M,Y} \u2209 SE(P) and for X',")
-                        print("there does not exist a {Y',Y'} \u2208 SE(P) such that X' \u2286 Y' and for each M' with X' \u2286 M' \u2282 Y', {M',Y'} \u2209 SE(P).")  
+                    if not silent:
+                        print("Condition 2 does not hold for the following X, Y, X':")
+                        print([format_set(X), format_set(Y), format_set(X_prime)])
+                        if holds:
+                            print("For a {X,Y} with {Y,Y} \u2208 SE(P) and X \u2282 Y, such that for each M with X \u2286 M \u2282 Y, {M,Y} \u2209 SE(P) and for X',")
+                            print("there does not exist a {Y',Y'} \u2208 SE(P) such that X' \u2286 Y' and for each M' with X' \u2286 M' \u2282 Y', {M',Y'} \u2209 SE(P).")  
                     holds = False
     return holds
 
@@ -308,7 +355,7 @@ def cond_2_check(SE_model_list, A, A_subsets, model):
     return True
     
 
-def cond_3(SE_model_list, A):
+def cond_3(SE_model_list, A, silent=False):
     holds = True
     for model in SE_model_list:
         X = model[0]
@@ -317,18 +364,20 @@ def cond_3(SE_model_list, A):
             continue
         else:
             if not FULL:
-                print('Condition 3 does not hold at least for the following Y:')
+                if not silent:
+                    print('Condition 3 does not hold at least for the following Y:')
+                    print(format_set(Y))
+                    print('with the following Y \u222a A:')
+                    print(format_set(Y | A))
+                    print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies {Y \u222a A, Y \u222a A} \u2208 SE(P)")
+                return False
+            if not silent:
+                print('Condition 3 does not hold for the following Y:')
                 print(format_set(Y))
                 print('with the following Y \u222a A:')
                 print(format_set(Y | A))
-                print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies {Y \u222a A, Y \u222a A} \u2208 SE(P)")
-                return False
-            print('Condition 3 does not hold for the following Y:')
-            print(format_set(Y))
-            print('with the following Y \u222a A:')
-            print(format_set(Y | A))
-            if holds:
-                print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies {Y \u222a A, Y \u222a A} \\u2208 SE(P)")
+                if holds:
+                    print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies {Y \u222a A, Y \u222a A} \\u2208 SE(P)")
             holds = False
     return holds
 
@@ -348,7 +397,7 @@ def comb_uniform_conds(SE_model_list, A):
             return False
     return True
 
-def strong_cond1(SE_model_list, A):
+def strong_cond1(SE_model_list, A, silent=False):
     holds = True
     for model in SE_model_list:
         X = model[0]
@@ -357,18 +406,20 @@ def strong_cond1(SE_model_list, A):
             continue
         else:
             if not FULL:
-                print('Strong simplification condition 1 does not hold at least for the following Y:')
-                print(format_set(Y))
-                print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies A \u2286 Y")
+                if not silent:
+                    print('Strong simplification condition 1 does not hold at least for the following Y:')
+                    print(format_set(Y))
+                    print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies A \u2286 Y")
                 return False
-            print('Strong simplification condition 1 does not hold for the following Y:')
-            print(format_set(Y))
-            if holds:
-                print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies A \u2286 Y")
+            if not silent:
+                print('Strong simplification condition 1 does not hold for the following Y:')
+                print(format_set(Y))
+                if holds:
+                    print("The following was not satisfied: {Y,Y} \u2208 SE(P) implies A \u2286 Y")
             holds = False
     return holds
 
-def strong_cond2(SE_model_list, A):
+def strong_cond2(SE_model_list, A, silent=False):
     holds = True
     for model in SE_model_list:
         X = model[0]
@@ -378,18 +429,20 @@ def strong_cond2(SE_model_list, A):
             continue
         else:
             if not FULL:
-                print('Strong simplification condition 2 does not hold at least for the following X, Y:')
-                print([format_set(X), format_set(Y)])
-                print("The following was not satisfied: For all {X,Y} \u2208 SE(P), X[projected to complement A] = Y[projected to complement A]  implies X = Y ")
+                if not silent:
+                    print('Strong simplification condition 2 does not hold at least for the following X, Y:')
+                    print([format_set(X), format_set(Y)])
+                    print("The following was not satisfied: For all {X,Y} \u2208 SE(P), X[projected to complement A] = Y[projected to complement A]  implies X = Y ")
                 return False
-            print('Strong simplification condition 2 does not hold for the following X, Y:')
-            print([format_set(X), format_set(Y)])
-            if holds:
-                print("The following was not satisfied: For all {X,Y} \u2208 SE(P), X[projected to complement A] = Y[projected to complement A]  implies X = Y ")
+            if not silent:
+                print('Strong simplification condition 2 does not hold for the following X, Y:')
+                print([format_set(X), format_set(Y)])
+                if holds:
+                    print("The following was not satisfied: For all {X,Y} \u2208 SE(P), X[projected to complement A] = Y[projected to complement A]  implies X = Y ")
             holds = False
     return holds
 
-def strong_cond3(SE_model_list, A):
+def strong_cond3(SE_model_list, A, silent=False):
     holds = True
     for model in SE_model_list:
         X = model[0]
@@ -398,18 +451,20 @@ def strong_cond3(SE_model_list, A):
             continue
         else:
             if not FULL:
-                print('Strong simplification condition 3 does not hold at least for the following X, Y:')
+                if not silent:
+                    print('Strong simplification condition 3 does not hold at least for the following X, Y:')
+                    print([format_set(X), format_set(Y)])
+                    print('with the following X \u222a (Y \u2229 A):')
+                    print(format_set(X | (Y & A)))
+                    print("The following was not satisfied: {X,Y} \u2208 SE(P) implies {X \u222a (Y \u2229 A), Y} \u2208 SE(P)")
+                return False
+            if not silent:
+                print('Strong simplification condition 3 does not hold for the following X, Y:')
                 print([format_set(X), format_set(Y)])
                 print('with the following X \u222a (Y \u2229 A):')
                 print(format_set(X | (Y & A)))
-                print("The following was not satisfied: {X,Y} \u2208 SE(P) implies {X \u222a (Y \u2229 A), Y} \u2208 SE(P)")
-                return False
-            print('Strong simplification condition 3 does not hold for the following X, Y:')
-            print([format_set(X), format_set(Y)])
-            print('with the following X \u222a (Y \u2229 A):')
-            print(format_set(X | (Y & A)))
-            if holds:
-                print("The following was not satisfied: {X,Y} \u2208 SE(P) implies {X \u222a (Y \u2229 A), Y} \u2208 SE(P)")
+                if holds:
+                    print("The following was not satisfied: {X,Y} \u2208 SE(P) implies {X \u222a (Y \u2229 A), Y} \u2208 SE(P)")
             holds = False
     return holds
 
@@ -437,6 +492,10 @@ def project_to_complement(X, Y, A):
     Y_complement_A = Y - A
     return (X_complement_A, Y_complement_A)
 
+"""
+    generates and returns a list of sets which contains the sets 
+    that are supersets to subseteq and true subsets to supset
+"""
 def generate_sets(subseteq, supset):
     extra_elems = list(supset - subseteq)
     sets = [subseteq]
