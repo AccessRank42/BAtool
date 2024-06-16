@@ -141,17 +141,7 @@ def test_uniform_conditions(SE_model_list, A_vars):
         
     return unif_A_simp_exists
 
-def test_uniform_conditions_quiet(SE_model_list, A_vars):   #note: not fully quiet, conditions still print on failure 
-    # unif_A_simp_exists = True
-    # if not cond_1(SE_model_list, A_vars, True):
-    #     unif_A_simp_exists = False
-        
-    # if not cond_2(SE_model_list, A_vars, True):
-    #     unif_A_simp_exists = False
-    
-    # if not cond_3(SE_model_list, A_vars, True):
-    #     unif_A_simp_exists = False
-        
+def test_uniform_conditions_quiet(SE_model_list, A_vars):
     cond1 = cond_1(SE_model_list, A_vars, True)
     cond2 = cond_2(SE_model_list,  A_vars, True)
     cond3 = cond_3(SE_model_list, A_vars, True)
@@ -190,8 +180,7 @@ def test_strong_conditions(SE_model_list, A_vars):
     
     return strong_A_simp_exists
 
-def test_strong_conditions_quiet(SE_model_list, A_vars):    #note: not fully quiet, conditions still print on failure 
-    # strong_A_simp_exists = True
+def test_strong_conditions_quiet(SE_model_list, A_vars):
     cond1 = strong_cond1(SE_model_list, A_vars, True)
     cond2 = strong_cond2(SE_model_list,  A_vars, True)
     cond3 = strong_cond3(SE_model_list, A_vars, True)
