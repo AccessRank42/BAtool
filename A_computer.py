@@ -22,8 +22,8 @@ def main():
             print("Use: python A_computer.py [-p|-l] [-h] P_filename \n")
             print("-h: help; prints this text")
             print("-latex: displays the result in a manner that makes it easier to copy into a LaTex document.")
-            print("-l: input NOT as program (default); specifies input parsing behaviour")
-            print("-p: input as program; specifies input parsing behaviour")
+            print("-l: input NOT as program; specifies input parsing behaviour")
+            print("-p: input as a logic program; specifies input parsing behaviour; default behavior")
             print("'as program' input behaviour requires P resp. A to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
             return 0

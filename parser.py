@@ -8,7 +8,6 @@ def main():
     pass
 
 def parse_SE_models_of_P(filename, as_program = False):
-    # print(filename)
     if as_program:
         with open(filename) as file:
             pass
@@ -25,7 +24,6 @@ def parse_SE_models_of_P(filename, as_program = False):
             while temp != '':
                 output += temp
                 temp =  file.readline()
-    #SE_model_list = []
     SE_model_set = set()
     for item in output.split("\n"):
         if len(item) == 0:
@@ -33,9 +31,7 @@ def parse_SE_models_of_P(filename, as_program = False):
         X, Y = item.split(", ")
         X = frozenset(x for x in X if x not in '{} <')
         Y = frozenset(x for x in Y if x not in '{} >')
-        #SE_model_list.append((X, Y))
         SE_model_set.add((X, Y))
-    #return SE_model_list #might contain duplicates
     return [(set(s[0]), set(s[1])) for s in list(SE_model_set)] #should not contain duplicates
 
 def parse_A(filename, as_program = False):
