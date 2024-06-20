@@ -89,7 +89,8 @@ def main():
     except OSError as e:
         print("Error while parsing. Could not open file " + e.filename + ". " + e.strerror)
         return 1
-    except:
+    except Exception as e:
+        print(e.strerror)
         print("Error while parsing. Use with -h for usage")
         return 1
     

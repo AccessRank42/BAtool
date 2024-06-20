@@ -9,12 +9,9 @@ def main():
 
 def parse_SE_models_of_P(filename, as_program = False):
     if as_program:
-        with open(filename) as file:
-            pass
         args = ("./htmod", filename)
-        popen = subprocess.Popen(args, stdout=subprocess.PIPE, text=True)
-        popen.wait()
-        output = popen.stdout.read()
+        completed_process = subprocess.run(args, capture_output=True, text=True)
+        output = completed_process.stdout
         if output == "0\n":
             return []
     else:
@@ -37,8 +34,11 @@ def parse_SE_models_of_P(filename, as_program = False):
 def parse_A(filename, as_program = False):
     A_vars = set()
     if as_program:
+        #TODO: what is this even supposde to do?
         #TODO: figure out how to do this via subprocess (security)
         # args = ("./lp2dlp", '-F', '<'+filename+'>', 'A.out')
+        # subprocess.run(args)
+        # args = ('./lp2dlp','-F','<'+filename+'>','A.out')
         # subprocess.run(args)
         os.system('./lp2dlp -F <'+filename+'> A.out')
         # popen = subprocess.Popen(args)
