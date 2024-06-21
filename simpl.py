@@ -11,7 +11,7 @@ def main():
     save_output = False
     A_from_CL = False
     expanded_text = False
-    as_program = (False, False)
+    as_program = False
     as_program_set = False
     cleaned_args = []
     for arg in sys.argv:
@@ -22,13 +22,13 @@ def main():
             print("-h: help; prints this text")
             print("-f: full script output; displays all failed cases")
             print("-t: expanded explanation for failure of shown case(s)")
-            print("-l or --ll: input NOT as program (default); specifies input parsing behaviour")
-            print("-p or --pp: input as program; specifies input parsing behaviour")
-            print("--lp: P NOT as program, A as program; specifies input parsing behaviour")
-            print("--pl: P as program, A NOT as program; specifies input parsing behaviour\n")
-            print("'as program' input behaviour requires P resp. A to be in the format of a logic program. Simple example: 'b -> a.'")
+            print("-l: input NOT as program (default); specifies input parsing behaviour for P")
+            print("-p: input as program; specifies input parsing behaviour for P\n")
+            # print("--lp: P NOT as program, A as program; specifies input parsing behaviour")
+            # print("--pl: P as program, A NOT as program; specifies input parsing behaviour\n")
+            print("'as program' input behaviour requires P to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
-            print("'NOT as program' input behaviour requires  A to be in the format of a set of atoms. Simple example: '{a, b, c, d}'")
+            # print("'NOT as program' input behaviour requires  A to be in the format of a set of atoms. Simple example: '{a, b, c, d}'")
             return 0
         elif arg == '-s':
             save_output = True # TODO: needs to be implemented --> but might not be needed, just use '> somefile'
@@ -40,25 +40,25 @@ def main():
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue
-            as_program = (True, True)
+            as_program = True
             as_program_set = True
-        elif arg == '--pl':
+        elif arg == '--pl': #deprecated 
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue
-            as_program = (True, False)
+            as_program = True
             as_program_set = True
-        elif arg == '--lp':
+        elif arg == '--lp': #deprecated 
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue
-            as_program = (False, True)
+            as_program = False
             as_program_set = True
         elif arg == '-l' or arg == '--ll':
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue
-            as_program = (False, False)
+            as_program = False
             as_program_set = True
         elif arg == '-f':
             global FULL
@@ -75,7 +75,7 @@ def main():
             return 1
     
     try:
-        SE_model_list = p.parse_SE_models_of_P(cleaned_args[1], as_program[0])
+        SE_model_list = p.parse_SE_models_of_P(cleaned_args[1], as_program)
         # print(SE_model_list)
         
         if A_from_CL:
@@ -84,13 +84,12 @@ def main():
             else:
                 A_vars = set(cleaned_args[2].split(','))
         else:
-            A_vars = p.parse_A(cleaned_args[2], as_program[1])
+            A_vars = p.parse_A(cleaned_args[2])
         # print(A_vars)
     except OSError as e:
         print("Error while parsing. Could not open file " + e.filename + ". " + e.strerror)
         return 1
-    except Exception as e:
-        print(e.strerror)
+    except:
         print("Error while parsing. Use with -h for usage")
         return 1
     
@@ -104,7 +103,7 @@ def main():
         
     #print(SE_model_list)
         
-    if (as_program[0]):
+    if (as_program):
         print_formated_SE_model_list(SE_model_list)
 
     projected_list = []
