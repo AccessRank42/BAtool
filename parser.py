@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import subprocess
-import os
 
 def main():
     pass
@@ -25,9 +24,15 @@ def parse_SE_models_of_P(filename, as_program = False):
     for item in output.split("\n"):
         if len(item) == 0:
             continue
-        X, Y = item.split(", ")
-        X = frozenset(x for x in X if x not in '{} <')
-        Y = frozenset(x for x in Y if x not in '{} >')
+        # X, Y = item.split(", ")
+        # X = frozenset(x for x in X if x not in '{} <')
+        # Y = frozenset(x for x in Y if x not in '{} >')
+        X, Y = item.replace('<', '').replace('>', '').replace('{', '').replace('}', '').split(',')
+        X = frozenset(x for x in X.split(' '))
+        Y = frozenset(x for x in Y.split(' '))
+        if not X <= Y: #invalid input
+            print("Invalid SE-model <X, Y> provided, X <= Y does not hold with X=" + str([x for x in X]) + ", Y="+ str([y for y in Y]))
+            raise
         SE_model_set.add((X, Y))
     return [(set(s[0]), set(s[1])) for s in list(SE_model_set)] #should not contain duplicates
 
