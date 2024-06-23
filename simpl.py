@@ -15,7 +15,7 @@ def main():
     cleaned_args = []
     for arg in sys.argv:
         if arg == '-h':
-            print("Use: python simpl.py [-f] [-p|-l|--pp|--ll|--lp|--pl] [-h] [-t] [-c] P_filename A_filename\n")
+            print("Use: python simpl.py [-f] [-p|-l] [-h] [-t] [-c] P_filename A_filename\n")
             print("-c: interprets A_filename as a set of atoms instead of a file name, input atoms only separated by a comma, e.g. 'a,b,c,d'")
             print("\t otherwise the file indicated by A_filename should in the format of a set of atoms. Simple example: '{a, b, c, d}'")
             print("-h: help; prints this text")
@@ -89,7 +89,7 @@ def main():
         return 1
     
     if DEBUG:
-        print("This should be the A")
+        print("These are the atoms of A:")
         print(A_vars)
     
     if len(SE_model_list) == 0:
