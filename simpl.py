@@ -8,7 +8,6 @@ FULL = False
 DEBUG = False
 
 def main():
-    save_output = False
     A_from_CL = False
     expanded_text = False
     as_program = False
@@ -16,22 +15,18 @@ def main():
     cleaned_args = []
     for arg in sys.argv:
         if arg == '-h':
-            # print("Use: python simpl.py P_filename A_filename [output_filename]")
             print("Use: python simpl.py [-f] [-p|-l|--pp|--ll|--lp|--pl] [-h] [-t] [-c] P_filename A_filename\n")
             print("-c: interprets A_filename as a set of atoms instead of a file name, input atoms only separated by a comma, e.g. 'a,b,c,d'")
+            print("\t otherwise the file indicated by A_filename should in the format of a set of atoms. Simple example: '{a, b, c, d}'")
             print("-h: help; prints this text")
             print("-f: full script output; displays all failed cases")
             print("-t: expanded explanation for failure of shown case(s)")
             print("-l: input NOT as program (default); specifies input parsing behaviour for P")
             print("-p: input as program; specifies input parsing behaviour for P\n")
-            # print("--lp: P NOT as program, A as program; specifies input parsing behaviour")
-            # print("--pl: P as program, A NOT as program; specifies input parsing behaviour\n")
             print("'as program' input behaviour requires P to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
-            # print("'NOT as program' input behaviour requires  A to be in the format of a set of atoms. Simple example: '{a, b, c, d}'")
+            
             return 0
-        elif arg == '-s':
-            save_output = True # TODO: needs to be implemented --> but might not be needed, just use '> somefile'
         elif arg == '-c':
             A_from_CL = True
         elif arg == '-t':

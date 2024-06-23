@@ -139,7 +139,7 @@ def print_As_for_quick_LaTex_export(valid_As):
     print(s)
     
 """
-    prints the As in a LaTex friendly manner, displays the empty set
+    prints the As formated for readability, displays the empty set
 """
 def print_As_formated(valid_As):
     s = ''
