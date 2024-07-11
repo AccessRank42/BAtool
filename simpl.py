@@ -25,7 +25,6 @@ def main():
             print("-p: input as program; specifies input parsing behaviour for P\n")
             print("'as program' input behaviour requires P to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
-            
             return 0
         elif arg == '-c':
             A_from_CL = True
@@ -71,7 +70,6 @@ def main():
     
     try:
         SE_model_list = p.parse_SE_models_of_P(cleaned_args[1], as_program)
-        # print(SE_model_list)
         
         if A_from_CL:
             if (len(cleaned_args) ==  2):
@@ -95,21 +93,24 @@ def main():
     if len(SE_model_list) == 0:
         print("Program has no SE-models.")
         print("Inconsistent program.")
-        
-    #print(SE_model_list)
+
         
     if (as_program):
         print_formated_SE_model_list(SE_model_list)
 
-    projected_list = []
-    for model in SE_model_list:
-        projected_list.append(project_to_complement(model[0], model[1], A_vars))
+    # projected_list = []
+    # for model in SE_model_list:
+    #     projected_list.append(project_to_complement(model[0], model[1], A_vars))
     # print(projected_list)
     
-    if (test_uniform_conditions(SE_model_list, A_vars)):
-        print("A uniform A-simplification of P exists\n\n")
+    # if (test_uniform_conditions(SE_model_list, A_vars)):
+        # print("A uniform A-simplification of P exists\n\n")
     if (test_strong_conditions(SE_model_list, A_vars)):
-        print("A strong A-simplifaction of P exists")
+        print("A strong A-simplifaction of P exists\n\n")
+        print("Therefore, a uniform A-simplification of P also exists\n")
+        
+    elif (test_uniform_conditions(SE_model_list, A_vars)):
+        print("A uniform A-simplification of P exists\n\n")
     
 def test_uniform_conditions(SE_model_list, A_vars):    
     unif_A_simp_exists = True
@@ -140,12 +141,6 @@ def test_uniform_conditions_quiet(SE_model_list, A_vars):
     cond1 = cond_1(SE_model_list, A_vars, True)
     cond2 = cond_2(SE_model_list,  A_vars, True)
     cond3 = cond_3(SE_model_list, A_vars, True)
-    
-    # if (cond2 and not cond3):
-    #     print("hey")
-    #     print(A_vars)
-    # if (cond3 and not cond2):
-    #     print("ho")
 
     return cond1 and cond2 and cond3 
         

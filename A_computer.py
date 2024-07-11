@@ -52,6 +52,8 @@ def main():
     
     try:
         SE_model_list = p.parse_SE_models_of_P(cleaned_args[1], as_program)
+        
+        simpl.print_formated_SE_model_list(SE_model_list)
         # print(SE_model_list)
         
     except OSError as e:
@@ -77,8 +79,12 @@ def main():
     possible_As = generate_sets(set(), P_atoms) #generate subsets A' of this set
     
     # for possible_A in possible_As:  test conditions for these A', save/display those that fulfill them
-    valid_uniform_As = compute_uniform_As(SE_model_list, possible_As)
-    valid_strong_As = compute_strong_As(SE_model_list, possible_As)
+    # valid_uniform_As = compute_uniform_As(SE_model_list, possible_As)
+    # valid_strong_As = compute_strong_As(SE_model_list, possible_As)
+    valid_strong_As, valid_uniform_As = compute_strong_and_uniform_As(SE_model_list, possible_As)
+    
+    valid_strong_As.sort()
+    valid_uniform_As.sort()
     
     print("*" * 64)
     print("uniform As")
@@ -107,6 +113,17 @@ def compute_uniform_As(SE_model_list, possible_As):
             valid_As.append(possible_A)
     return valid_As 
 
+def compute_strong_and_uniform_As(SE_model_list, possible_As):
+    valid_strong_As = []
+    valid_uniform_As = []
+    for possible_A in possible_As:
+        if simpl.test_strong_conditions_quiet(SE_model_list, possible_A):
+            valid_strong_As.append(possible_A)
+            valid_uniform_As.append(possible_A)
+        elif simpl.test_uniform_conditions_quiet(SE_model_list, possible_A):
+            valid_uniform_As.append(possible_A)
+    return (valid_strong_As, valid_uniform_As) 
+
     
 """
     generates and returns a list of sets which contains the sets 
@@ -130,8 +147,10 @@ def print_As_for_quick_LaTex_export(valid_As):
             # s = s + '\u2205,' #prints the empty set symbol
             pass
         else:
+            A_as_list = list(A)
+            A_as_list.sort()
             s = s + '\\{'
-            for i, atom in enumerate(A):
+            for i, atom in enumerate(A_as_list):
                 if i > 0:
                     s = s + ','
                 s = s + atom
@@ -150,8 +169,10 @@ def print_As_formated(valid_As):
             s = s + '\u2205' #prints the empty set symbol
             # pass
         else:
+            A_as_list = list(A)
+            A_as_list.sort()
             s = s + '{'
-            for i, atom in enumerate(A):
+            for i, atom in enumerate(A_as_list):
                 if i > 0:
                     s = s + ','
                 s = s + atom
