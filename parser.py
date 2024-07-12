@@ -31,7 +31,11 @@ def parse_SE_models_of_P(filename, as_program = False):
             print("Invalid SE-model <X, Y> provided, X <= Y does not hold with X=" + str([x for x in X]) + ", Y="+ str([y for y in Y]))
             raise
         SE_model_set.add((X, Y))
-    return [(set(s[0]), set(s[1])) for s in list(SE_model_set)] #should not contain duplicates
+    SE_models = [(set(s[0]), set(s[1])) for s in list(SE_model_set)] #should not contain duplicates
+    # the below could be added:
+    # if not as_program:
+    #     #check if valid set (DLP does exist) by checking lemma conds)
+    return SE_models
 
 def parse_A(filename):
     A_vars = set()

@@ -211,16 +211,19 @@ def cond_1_check(SE_model_list, A, X, Y, X_complement_A, Y_complement_A):
         _, Y_prime_complement_A = project_to_complement(X_prime, Y_prime, A)
         if ((X_prime != Y_prime) # this model does not have the form <Y', Y'>
             or not (X <= Y_prime) # Y' supseteq X does not hold
-            or (Y_prime_complement_A != Y_complement_A)): # Y'_{\bar{A}} = Y_{\bar{A}} does not hold
+            or (Y_prime_complement_A != Y_complement_A)):
+            # Y'_{\bar{A}} = Y_{\bar{A}} does not hold
             continue # not a valid Y'
         Ms = generate_sets(X, Y_prime)
         M_failed = False
         for M in Ms:
-            if (M, Y_prime) in SE_model_list: # <M, Y'> \notin SE(P) does not hold
+            # <M, Y'> \notin SE(P) does not hold
+            if (M, Y_prime) in SE_model_list:
                 M_failed = True
                 break
         if not M_failed:
-            valid_Y_prime_found = True # this Y' is already what we were looking for ...
+            # this Y' is already what we were looking for ...
+            valid_Y_prime_found = True 
             break
         # ... otherwise not a valid Y', continue search
         
@@ -254,18 +257,20 @@ def cond_2(SE_model_list, A, silent=False):
                 for model_prime in SE_model_list:
                     Y_prime = model_prime[1]
                     
-                    X_prime_complement_A, Y_prime_complement_A = project_to_complement(
+                    _, Y_prime_complement_A = project_to_complement(
                         X_prime, Y_prime, A)
                     if (Y_prime != model_prime[0] 
                         or Y_complement_A != Y_prime_complement_A
                         or not X_prime <= Y_prime):
-                        continue                                    # not a valid Y'
+                        # not a valid Y'
+                        continue                                    
                     
                     
                     M_primes = generate_sets(X_prime, Y_prime)
                     M_prime_failed = False
                     for M_prime in M_primes:
-                        if (M_prime, Y_prime) in SE_model_list: # <M', Y'> \notin SE(P) does not hold
+                        if (M_prime, Y_prime) in SE_model_list:
+                            # <M', Y'> \notin SE(P) does not hold
                             M_prime_failed = True
                             break
                     if not M_prime_failed:
@@ -311,18 +316,20 @@ def cond_2_check(SE_model_list, A, A_subsets, model):
             for model_prime in SE_model_list:
                 Y_prime = model_prime[1]
                 
-                X_prime_complement_A, Y_prime_complement_A = project_to_complement(
+                _, Y_prime_complement_A = project_to_complement(
                     X_prime, Y_prime, A)
                 if (Y_prime != model_prime[0] 
                     or Y_complement_A != Y_prime_complement_A
                     or not X_prime <= Y_prime):
-                    continue                                    # not a valid Y'
+                    # not a valid Y'
+                    continue                                    
                 
                 
                 M_primes = generate_sets(X_prime, Y_prime)
                 M_prime_failed = False
                 for M_prime in M_primes:
-                    if (M_prime, Y_prime) in SE_model_list: # <M', Y'> \notin SE(P) does not hold
+                    if (M_prime, Y_prime) in SE_model_list:
+                        # <M', Y'> \notin SE(P) does not hold
                         M_prime_failed = True
                         break
                 if not M_prime_failed:

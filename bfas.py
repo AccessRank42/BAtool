@@ -53,7 +53,7 @@ def main():
     try:
         SE_model_list = p.parse_SE_models_of_P(cleaned_args[1], as_program)
         
-        simpl.print_formated_SE_model_list(SE_model_list)
+        # simpl.print_formated_SE_model_list(SE_model_list)
         # print(SE_model_list)
         
     except OSError as e:
