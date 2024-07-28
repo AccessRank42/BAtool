@@ -1,11 +1,11 @@
-#Simplification Tool
+# Simplification Tool
 
 This tool should work for Python version 3.8+.
 
 It consists of two parts, one that checks for a given logic program P and a set of atoms A if a strong resp. uniform A-simplification exists, the other one computes for a given logic program P all such existing A.
 The former is handled by simpl.py, the latter by bfas.py.
 
-##simpl.py
+## simpl.py
 
 This is the main part, which checks whether or not a given set of atoms can be removed in a way as to lead to a simplified program under the equivalence notion of strong resp. uniform simplification.
 
@@ -31,7 +31,7 @@ Flag explanations:\
 
 
 
-##bfas.py
+## bfas.py
 
 In order to help with the investigation of possible $A$'s for a given program $P$, a small brute force tester is also included. 
 
