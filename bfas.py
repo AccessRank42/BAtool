@@ -18,16 +18,15 @@ def main():
     cleaned_args = []
     for arg in sys.argv:
         if arg == '-h':
-            # print("Use: python simpl.py P_filename A_filename [output_filename]")
-            print("Use: python A_computer.py [-p|-l] [-h] P_filename \n")
+            print("Use: python bfas.py [-p|-m] [-h] P_filename \n")
             print("-h: help; prints this text")
-            print("-latex: displays the result in a manner that makes it easier to copy into a LaTex document.")
-            print("-l: input NOT as program; specifies input parsing behaviour")
+            print("--latex: displays the result in a manner that makes it easier to copy into a LaTex document.")
+            print("-m: input NOT as program; specifies input parsing behaviour")
             print("-p: input as a logic program; specifies input parsing behaviour; default behavior")
             print("'as program' input behaviour requires P resp. A to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
             return 0
-        elif arg == '-latex':
+        elif arg == '--latex':
             latex_output = True
         elif arg == '-s':
             save_output = True # TODO: needs to be implemented --> but might not be needed, just use '> somefile'
@@ -37,7 +36,7 @@ def main():
                 continue
             as_program = True
             as_program_set = True
-        elif arg == '-l':
+        elif arg == '-m' or arg == '-l':
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue

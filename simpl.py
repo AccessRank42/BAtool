@@ -15,13 +15,13 @@ def main():
     cleaned_args = []
     for arg in sys.argv:
         if arg == '-h':
-            print("Use: python simpl.py [-f] [-p|-l] [-h] [-t] [-c] P_filename A_filename\n")
+            print("Use: python simpl.py [-f] [-p|-m] [-h] [-t] [-c] P_filename A_filename\n")
             print("-c: interprets A_filename as a set of atoms instead of a file name, input atoms only separated by a comma, e.g. 'a,b,c,d'")
             print("\t otherwise the file indicated by A_filename should in the format of a set of atoms. Simple example: '{a, b, c, d}'")
             print("-h: help; prints this text")
             print("-f: full script output; displays all failed cases")
             print("-t: expanded explanation for failure of shown case(s)")
-            print("-l: input NOT as program (default); specifies input parsing behaviour for P")
+            print("-m: input NOT as program (default); specifies input parsing behaviour for P")
             print("-p: input as program; specifies input parsing behaviour for P\n")
             print("'as program' input behaviour requires P to be in the format of a logic program. Simple example: 'b -> a.'")
             print("'NOT as program' input behaviour requires P to be in the format of a sequence of SE-models. Simple example: '<{x a b},{x a b}>\\n<{x a},{x a}>'")
@@ -48,7 +48,7 @@ def main():
                 continue
             as_program = False
             as_program_set = True
-        elif arg == '-l' or arg == '--ll':
+        elif arg == '-m' or arg == '-l' or arg == '--ll':
             if as_program_set:
                 print('More than one input format flag set, all but the first are ignored')
                 continue
